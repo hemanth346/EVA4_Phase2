@@ -132,7 +132,7 @@ Testing from Insomnia
 > Make sure to set the Header to ```Content-Type : multipart/form-data``` if sending images
 
 
-![Testing from Insomnia](assests/api_call.JPG)
+![Testing from Insomnia](assests/api_call.jpg)
 
 
 You can also test using Postman or from CLI [using Curl](https://stackoverflow.com/a/28045514/7445772) 
