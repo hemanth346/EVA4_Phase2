@@ -1,0 +1,60 @@
+service: mobilenet-v2-pretrained
+
+provider:
+  name: aws
+  runtime: python3.8
+  stage: dev
+  region: ap-south-1
+  timeout: 30
+  environment:
+    S3_BUCKET: molibenetv2-tensorclan
+    MODEL_PATH: mobilenet_v2.pt
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - s3:getObject
+      Resource: arn:aws:s3:::molibenetv2-tensorclan/*
+
+
+custom:
+  pythonRequirements:
+    # works without dockerizing
+    # dockerizePip: true
+    zip: true
+    slim: true
+    strip: false
+    noDeploy:
+      - docutils
+      - jmespath
+      - pip
+      - python-dateutil
+      - setuptools
+      - six
+      - tensorboard
+    useStaticCache: true
+    useDownloadCache: true
+    cacheLocation: "./cache"
+
+package:
+  individually: false
+  exclude:
+    - package.json
+    - package-log.json
+    - node_modules/**
+    - cache/**
+    - __pycache__/**
+    - .pytest_cache/**
+
+functions:
+  classify_image:
+    handler: handler.classify_image
+    memorySize: 3008
+    timeout: 30
+    events:
+      - http:
+          path: classify
+          method: post
+          cors: true
+
+plugins:
+  - serverless-python-requirements
